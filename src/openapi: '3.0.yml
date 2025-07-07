@@ -1,0 +1,118 @@
+openapi: 3.0.3
+info:
+  title: Ergosafe API
+  version: '1.0'
+servers:
+  - url: http://10.10.51.61:8000
+
+paths:
+  /users/:
+    get:
+      summary: Listar utilizadores
+      responses:
+        '200':
+          description: Lista de utilizadores
+    post:
+      summary: Criar utilizador
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Utilizador criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /users/{user_id}:
+    delete:
+      summary: Eliminar utilizador
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Utilizador eliminado com sucesso
+        '404':
+          description: Utilizador não encontrado
+
+  /cameras/:
+    get:
+      summary: Listar câmaras
+      responses:
+        '200':
+          description: Lista de câmaras
+    post:
+      summary: Criar câmara
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Camera'
+      responses:
+        '200':
+          description: Câmara criada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Camera'
+
+  /cameras/{camera_id}:
+    delete:
+      summary: Eliminar câmara
+      parameters:
+        - name: camera_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Câmara eliminada com sucesso
+        '404':
+          description: Câmara não encontrada
+
+  /users/{user_id}/cameras:
+    get:
+      summary: Listar câmaras de um utilizador
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de câmaras associadas ao utilizador
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        email:
+          type: string
+
+    Camera:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user_id:
+          type: integer
+        url:
+          type: string

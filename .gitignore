@@ -1,0 +1,7 @@
+src/__pycache__
+__pycache__
+cam1.mp4
+cam2.mp4
+
+pose_landmarker_full.task
+yolov8n-pose.pt

@@ -1,0 +1,8 @@
+fastapi
+sqlmodel
+psycopg2-binary
+uvicorn[standard]
+mediapipe
+msgpack
+msgpack-numpy
+numpy
