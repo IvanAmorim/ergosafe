@@ -1,14 +1,14 @@
 version: '3.9'
 services:
-  ergosafe:
-    image: ergosafe
-    command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
-    volumes:
-      - .:/code
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
+  # ergosafe:
+  #   image: ergosafe
+  #   command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+  #   volumes:
+  #     - .:/code
+  #   ports:
+  #     - "8000:8000"
+  #   depends_on:
+  #     - db
 
   db:
     image: postgres:15
@@ -19,3 +19,22 @@ services:
       POSTGRES_DB: mydb
     ports:
       - "5432:5432"
+
+
+  influxdb:
+    image: influxdb:2.7
+    restart: always
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdb-data:/var/lib/influxdb2
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=admin123
+      - DOCKER_INFLUXDB_INIT_ORG=citin
+      - DOCKER_INFLUXDB_INIT_BUCKET=ergosafe
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=citin_token
+
+volumes:
+  influxdb-data:

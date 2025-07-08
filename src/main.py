@@ -7,6 +7,8 @@ from src.models import User, Camera
 from src.database import init_db
 from src.crud import create_user, get_users, create_camera, get_cameras, get_user_cameras, get_camera_by_id, delete_camera, delete_user
 from src.stream_manager import start_acquisition, get_stream, stop_camera_stream
+from src.influx_conf.query_scores import query_latest_table
+from src.influx_conf.influx_config import INFLUX_BUCKET
 
 app = FastAPI()
 
@@ -75,3 +77,22 @@ def api_delete_camera(camera_id: int):
     if not delete_camera(camera_id):
         raise HTTPException(status_code=404, detail="Câmara não encontrada")
     return {"message": "Câmara eliminada com sucesso"}
+
+#=== Scores ===
+
+@app.get("/reba/{camera_id}/{operator}")
+def api_get_reba_table(camera_id: int, operator: str):
+    camera_tag = f"camera_{camera_id}"
+    data = query_latest_table(bucket=INFLUX_BUCKET, measurement="reba_table", camera=camera_tag, operator=operator)
+    if not data:
+        raise HTTPException(status_code=404, detail="Dados REBA não encontrados")
+    return {"camera": camera_tag, "operator": operator, "reba_table": data}
+
+
+@app.get("/rula/{camera_id}/{operator}")
+def api_get_rula_table(camera_id: int, operator: str):
+    camera_tag = f"camera_{camera_id}"
+    data = query_latest_table(bucket=INFLUX_BUCKET, measurement="rula_table", camera=camera_tag, operator=operator)
+    if not data:
+        raise HTTPException(status_code=404, detail="Dados RULA não encontrados")
+    return {"camera": camera_tag, "operator": operator, "rula_table": data}

@@ -1,0 +1,270 @@
+openapi: 3.0.3
+info:
+  title: Ergosafe API
+  version: '1.0'
+servers:
+  - url: http://10.10.51.61:8000
+
+paths:
+  /users/:
+    get:
+      summary: Listar utilizadores
+      responses:
+        '200':
+          description: Lista de utilizadores
+    post:
+      summary: Criar utilizador
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Utilizador criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /users/{user_id}:
+    delete:
+      summary: Eliminar utilizador
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Utilizador eliminado com sucesso
+        '404':
+          description: Utilizador não encontrado
+
+  /users/{user_id}/cameras:
+    get:
+      summary: Listar câmaras de um utilizador
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de câmaras associadas ao utilizador
+
+  /cameras/:
+    get:
+      summary: Listar câmaras
+      responses:
+        '200':
+          description: Lista de câmaras
+    post:
+      summary: Criar câmara
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Camera'
+      responses:
+        '200':
+          description: Câmara criada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Camera'
+
+  /cameras/{camera_id}:
+    delete:
+      summary: Eliminar câmara
+      parameters:
+        - name: camera_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Câmara eliminada com sucesso
+        '404':
+          description: Câmara não encontrada
+
+  /start/{camera_id}:
+    post:
+      summary: Iniciar aquisição da câmara
+      parameters:
+        - name: camera_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Stream iniciada
+        '404':
+          description: Câmara não encontrada
+
+  /stop/{camera_id}:
+    get:
+      summary: Parar aquisição da câmara
+      parameters:
+        - name: camera_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Câmara parada
+        '404':
+          description: Câmara não encontrada ou não estava ativa
+
+  /stream/{camera_id}:
+    get:
+      summary: Obter stream da câmara
+      parameters:
+        - name: camera_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Stream de vídeo (multipart)
+          content:
+            multipart/x-mixed-replace:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Stream não disponível
+
+  /rula_table/{camera_id}:
+    get:
+      summary: Obter última tabela RULA da câmara
+      parameters:
+        - name: camera_id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: operator
+          in: query
+          required: false
+          schema:
+            type: string
+            default: "default"
+      responses:
+        '200':
+          description: Últimos valores da tabela RULA
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _time:
+                      type: string
+                      format: date-time
+                    upper_arm_score:
+                      type: integer
+                    forearm_score:
+                      type: integer
+                    wrist_score:
+                      type: integer
+                    neck_score:
+                      type: integer
+                    trunk_score:
+                      type: integer
+                    leg_score:
+                      type: integer
+              example:
+                - _time: "2025-07-07T14:34:00Z"
+                  upper_arm_score: 4
+                  forearm_score: 1
+                  wrist_score: 2
+                  neck_score: 2
+                  trunk_score: 3
+                  leg_score: 1
+        '404':
+          description: Dados não encontrados
+
+  /reba_table/{camera_id}:
+    get:
+      summary: Obter última tabela REBA da câmara
+      parameters:
+        - name: camera_id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: operator
+          in: query
+          required: false
+          schema:
+            type: string
+            default: "default"
+      responses:
+        '200':
+          description: Últimos valores da tabela REBA
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _time:
+                      type: string
+                      format: date-time
+                    neck_score:
+                      type: integer
+                    trunk_score:
+                      type: integer
+                    leg_score:
+                      type: integer
+                    upper_arm_score:
+                      type: integer
+                    lower_arm_score:
+                      type: integer
+                    wrist_score:
+                      type: integer
+              example:
+                - _time: "2025-07-07T14:34:00Z"
+                  neck_score: 3
+                  trunk_score: 4
+                  leg_score: 2
+                  upper_arm_score: 3
+                  lower_arm_score: 1
+                  wrist_score: 2
+        '404':
+          description: Dados não encontrados
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        email:
+          type: string
+
+    Camera:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user_id:
+          type: integer
+        url:
+          type: string

@@ -28,7 +28,7 @@ latest_frame = None
 frame_lock = mp.Lock()
 
 # === InfluxDB Config ===
-INFLUX_URL = "http://10.10.51.61:8086"
+INFLUX_URL = "http://10.10.99.61:8086"
 INFLUX_TOKEN = "admin"
 INFLUX_ORG = "CiTin"
 INFLUX_BUCKET = "ergosafe"

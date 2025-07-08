@@ -51,6 +51,7 @@ def start_acquisition(camera_id: int):
                 time.sleep(0.1)
                 continue
             if not frame_queue.full():
+                frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
                 frame_queue.put(frame)
             time.sleep(0.05)  # ~20 FPS
 
@@ -70,15 +71,17 @@ def stop_camera_stream(camera_id: int):
         del queues[camera_id]
         del running_flags[camera_id]
 
-
 def get_stream(camera_id: int):
     if camera_id not in queues:
         start_acquisition(camera_id)
-        time.sleep(1)  
-        
+        time.sleep(1)
+
+    # === Obter operador associado à câmara ===
+    camera = get_camera_by_id(camera_id)
+    operator = f"user_{camera.user_id}" if camera and camera.user_id else "default"
 
     def generate():
-        pose_detector = YoloPoseSkeleton()
+        pose_detector = YoloPoseSkeleton(cam_id=camera_id, operator=operator)
 
         while True:
             if camera_id not in queues:
@@ -88,13 +91,13 @@ def get_stream(camera_id: int):
                 frame = queues[camera_id].get()
                 angles_list, annotated = pose_detector.detect_and_compute_angles(frame)
 
-                for idx, angles in enumerate(angles_list):
-                    for i, angle in enumerate(angles):
-                        cv2.putText(annotated, f"A{i+1}: {angle[0]:.1f}", (10, 20 + 20*i + idx*300),
-                                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+                # for idx, angles in enumerate(angles_list):
+                #     for i, angle in enumerate(angles):
+                #         cv2.putText(annotated, f"A{i+1}: {angle[0]:.1f}", (10, 20 + 20*i + idx*300),
+                #                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
 
-                annotated = cv2.rotate(annotated, cv2.ROTATE_90_CLOCKWISE)
                 ret, jpeg = cv2.imencode(".jpg", annotated)
+
                 if ret:
                     yield (b"--frame\r\n"
                            b"Content-Type: image/jpeg\r\n\r\n" + jpeg.tobytes() + b"\r\n")
@@ -102,5 +105,6 @@ def get_stream(camera_id: int):
                 time.sleep(0.01)
 
     return StreamingResponse(generate(), media_type="multipart/x-mixed-replace; boundary=frame")
+
 
 
