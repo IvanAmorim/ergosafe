@@ -11,6 +11,7 @@ class DualCameraAssessment:
         self.side_detector = YoloPoseSkeleton(cam_id=side_cam_id, operator=operator)
 
     def process(self, front_frame, side_frame) -> Tuple[cv2.Mat, float, float]:
+
         """Process frames from both cameras and compute combined scores.
 
         The front camera is responsible for elbow flexion and shoulder
@@ -20,6 +21,7 @@ class DualCameraAssessment:
         """
 
         angles_front, annotated_front = self.front_detector.detect_and_compute_angles(front_frame)
+
         angles_side, _ = self.side_detector.detect_and_compute_angles(side_frame)
 
         if not angles_front or not angles_side:
@@ -31,6 +33,7 @@ class DualCameraAssessment:
         combined[1] = angles_front[1][0]  # right elbow flexion
         combined[4] = angles_front[4][0]  # left shoulder abduction
         combined[5] = angles_front[5][0]  # right shoulder abduction
+
 
         angle_dict = self.front_detector.convert_angles_to_dict(combined)
 
