@@ -9,6 +9,7 @@ from queue import Queue
 from src.crud import get_camera_by_id
 from fastapi.responses import StreamingResponse
 from src.inference import YoloPoseSkeleton
+from src.dual_assessment import DualCameraAssessment
 
 
 logger = logging.getLogger("StreamManager")
@@ -101,6 +102,35 @@ def get_stream(camera_id: int):
                 if ret:
                     yield (b"--frame\r\n"
                            b"Content-Type: image/jpeg\r\n\r\n" + jpeg.tobytes() + b"\r\n")
+            else:
+                time.sleep(0.01)
+
+    return StreamingResponse(generate(), media_type="multipart/x-mixed-replace; boundary=frame")
+
+
+def get_dual_stream(front_id: int, side_id: int):
+    if front_id not in queues:
+        start_acquisition(front_id)
+        time.sleep(1)
+    if side_id not in queues:
+        start_acquisition(side_id)
+        time.sleep(1)
+
+    cam_front = get_camera_by_id(front_id)
+    operator = f"user_{cam_front.user_id}" if cam_front and cam_front.user_id else "default"
+
+    def generate():
+        assessor = DualCameraAssessment(front_id, side_id, operator=operator)
+        while True:
+            if front_id not in queues or side_id not in queues:
+                break
+            if not queues[front_id].empty() and not queues[side_id].empty():
+                frame_front = queues[front_id].get()
+                frame_side = queues[side_id].get()
+                annotated, _, _ = assessor.process(frame_front, frame_side)
+                ret, jpeg = cv2.imencode(".jpg", annotated)
+                if ret:
+                    yield (b"--frame\r\n" + b"Content-Type: image/jpeg\r\n\r\n" + jpeg.tobytes() + b"\r\n")
             else:
                 time.sleep(0.01)
 
