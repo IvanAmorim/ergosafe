@@ -1,6 +1,6 @@
 # src/crud.py
 from sqlmodel import select, Session
-from src.models import User, Camera
+from src.models import User, Camera, CameraSide
 from src.database import get_session, engine
 from typing import Optional
 
@@ -26,14 +26,20 @@ def create_camera(camera: Camera) -> Camera:
         return camera
 
 
-def get_cameras() -> list[Camera]:
+def get_cameras(side: CameraSide | None = None) -> list[Camera]:
     with get_session() as session:
-        return session.exec(select(Camera)).all()
+        statement = select(Camera)
+        if side:
+            statement = statement.where(Camera.side == side)
+        return session.exec(statement).all()
 
 
-def get_user_cameras(user_id: int) -> list[Camera]:
+def get_user_cameras(user_id: int, side: CameraSide | None = None) -> list[Camera]:
     with get_session() as session:
-        return session.exec(select(Camera).where(Camera.user_id == user_id)).all()
+        statement = select(Camera).where(Camera.user_id == user_id)
+        if side:
+            statement = statement.where(Camera.side == side)
+        return session.exec(statement).all()
     
 def get_camera_by_id(camera_id: int) -> Optional[Camera]:
     with Session(engine) as session:

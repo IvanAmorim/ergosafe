@@ -3,12 +3,13 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
-from src.models import User, Camera
+from src.models import User, Camera, CameraSide
 from src.database import init_db
 from src.crud import create_user, get_users, create_camera, get_cameras, get_user_cameras, get_camera_by_id, delete_camera, delete_user
-from src.stream_manager import start_acquisition, get_stream, stop_camera_stream
+from src.stream_manager import start_acquisition, get_stream, stop_camera_stream, get_dual_stream
 from src.influx_conf.query_scores import query_latest_table
 from src.influx_conf.influx_config import INFLUX_BUCKET
+import uvicorn
 
 app = FastAPI()
 
@@ -38,12 +39,12 @@ def api_create_camera(camera: Camera):
     return create_camera(camera)
 
 @app.get("/cameras/", response_model=list[Camera])
-def api_get_cameras():
-    return get_cameras()
+def api_get_cameras(side: CameraSide | None = None):
+    return get_cameras(side)
 
 @app.get("/users/{user_id}/cameras", response_model=list[Camera])
-def api_get_user_cameras(user_id: int):
-    return get_user_cameras(user_id)
+def api_get_user_cameras(user_id: int, side: CameraSide | None = None):
+    return get_user_cameras(user_id, side)
 
 @app.post("/start/{camera_id}")
 def api_start_stream(camera_id: int):
@@ -58,6 +59,11 @@ def api_get_stream(camera_id: int):
     if not stream:
         raise HTTPException(status_code=404, detail="Stream não disponível")
     return stream
+
+
+@app.get("/dual_stream/{front_id}/{side_id}")
+def api_get_dual_stream(front_id: int, side_id: int):
+    return get_dual_stream(front_id, side_id)
  
  
 @app.get("/stop/{camera_id}")
@@ -96,3 +102,8 @@ def api_get_rula_table(camera_id: int, operator: str):
     if not data:
         raise HTTPException(status_code=404, detail="Dados RULA não encontrados")
     return {"camera": camera_tag, "operator": operator, "rula_table": data}
+
+
+if __name__ == "__main__":
+    uvicorn.run("src.main:app", host="0.0.0.0", port=8000)
+
