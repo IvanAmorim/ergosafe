@@ -46,11 +46,11 @@ def api_get_cameras(side: CameraSide | None = None):
 def api_get_user_cameras(user_id: int, side: CameraSide | None = None):
     return get_user_cameras(user_id, side)
 
-@app.post("/start/{camera_id}")
-def api_start_stream(camera_id: int):
-    # camera = get_camera_by_id(camera_id) 
-    start_acquisition(camera_id)
-    return {"message": "Stream started"}
+# @app.post("/start/{camera_id}")
+# def api_start_stream(camera_id: int):
+#     # camera = get_camera_by_id(camera_id) 
+#     start_acquisition(camera_id)
+#     return {"message": "Stream started"}
 
 
 @app.get("/stream/{camera_id}")

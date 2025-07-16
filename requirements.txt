@@ -6,3 +6,6 @@ mediapipe
 msgpack
 msgpack-numpy
 numpy
+influxdb-client
+ultralytics
+httpx
