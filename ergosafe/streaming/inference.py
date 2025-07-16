@@ -3,9 +3,13 @@ import numpy as np
 import cv2
 import torch
 import math
-from ergosafe.influx import send_pose_data, send_reba_table, send_rula_table
-from ergosafe.reba_score import compute_reba_score
-from ergosafe.rula_score import compute_rula_score
+from ergosafe.influx.influx import (
+    send_pose_data,
+    send_reba_table,
+    send_rula_table,
+)
+from ergosafe.scoring.reba_score import compute_reba_score
+from ergosafe.scoring.rula_score import compute_rula_score
 from datetime import datetime
 import threading
 

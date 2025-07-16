@@ -6,9 +6,9 @@ import logging
 import numpy as np
 from threading import Thread
 from queue import Queue
-from ergosafe.crud import get_camera_by_id
+from ergosafe.db.crud import get_camera_by_id
 from fastapi.responses import StreamingResponse
-from ergosafe.inference import YoloPoseSkeleton
+from ergosafe.streaming.inference import YoloPoseSkeleton
 
 
 logger = logging.getLogger("StreamManager")

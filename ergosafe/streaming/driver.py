@@ -2,7 +2,7 @@ import cv2
 import time
 import logging
 import numpy as np
-from ergosafe.crud import get_camera_by_id
+from ergosafe.db.crud import get_camera_by_id
 
 logger = logging.getLogger("CameraDriver")
 
