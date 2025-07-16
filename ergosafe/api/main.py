@@ -3,12 +3,25 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
-from ergosafe.models import User, Camera
-from ergosafe.database import init_db
-from ergosafe.crud import create_user, get_users, create_camera, get_cameras, get_user_cameras, get_camera_by_id, delete_camera, delete_user
-from ergosafe.stream_manager import start_acquisition, get_stream, stop_camera_stream
-from ergosafe.influx_conf.query_scores import query_latest_table
-from ergosafe.influx_conf.influx_config import INFLUX_BUCKET
+from ergosafe.db.models import User, Camera
+from ergosafe.db.database import init_db
+from ergosafe.db.crud import (
+    create_user,
+    get_users,
+    create_camera,
+    get_cameras,
+    get_user_cameras,
+    get_camera_by_id,
+    delete_camera,
+    delete_user,
+)
+from ergosafe.streaming.stream_manager import (
+    start_acquisition,
+    get_stream,
+    stop_camera_stream,
+)
+from ergosafe.influx.influx_conf.query_scores import query_latest_table
+from ergosafe.influx.influx_conf.influx_config import INFLUX_BUCKET
 
 app = FastAPI()
 

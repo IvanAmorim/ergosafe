@@ -1,6 +1,6 @@
 from influxdb_client import Point
-from ergosafe.influx_conf.influx_client import write_api
-from ergosafe.influx_conf.influx_config import INFLUX_BUCKET
+from ergosafe.influx.influx_conf.influx_client import write_api
+from ergosafe.influx.influx_conf.influx_config import INFLUX_BUCKET
 import time
 
 

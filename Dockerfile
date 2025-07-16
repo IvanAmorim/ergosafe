@@ -49,4 +49,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY ./ergosafe ./ergosafe
 
 # Comando por defeito (pode ser alterado via docker-compose)
-CMD ["uvicorn", "ergosafe.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["uvicorn", "ergosafe.api.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

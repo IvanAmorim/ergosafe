@@ -1,7 +1,7 @@
 # src/crud.py
 from sqlmodel import select, Session
-from ergosafe.models import User, Camera
-from ergosafe.database import get_session, engine
+from ergosafe.db.models import User, Camera
+from ergosafe.db.database import get_session, engine
 from typing import Optional
 
 
