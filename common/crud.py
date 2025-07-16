@@ -1,7 +1,7 @@
-# src/crud.py
+# common/crud.py
 from sqlmodel import select, Session
-from src.models import User, Camera, CameraSide
-from src.database import get_session, engine
+from common.models import User, Camera, CameraSide
+from common.database import get_session, engine
 from typing import Optional
 
 

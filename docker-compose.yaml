@@ -3,7 +3,7 @@ version: '3.9'
 services:
   user-service:
     build: .
-    command: uvicorn services.user_service.app:app --host 0.0.0.0 --port 8001 --reload
+    command: uvicorn microservices.user_service.app:app --host 0.0.0.0 --port 8001 --reload
     volumes:
       - .:/code
     ports:
@@ -13,7 +13,7 @@ services:
 
   camera-service:
     build: .
-    command: uvicorn services.camera_service.app:app --host 0.0.0.0 --port 8002 --reload
+    command: uvicorn microservices.camera_service.app:app --host 0.0.0.0 --port 8002 --reload
     volumes:
       - .:/code
     ports:
@@ -23,7 +23,7 @@ services:
 
   analytics-service:
     build: .
-    command: uvicorn services.analytics_service.app:app --host 0.0.0.0 --port 8003 --reload
+    command: uvicorn microservices.analytics_service.app:app --host 0.0.0.0 --port 8003 --reload
     volumes:
       - .:/code
     ports:

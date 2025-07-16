@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from src.stream_manager import start_acquisition, get_stream, stop_camera_stream, get_dual_stream
-from src.database import init_db
-from src.crud import get_camera_by_id
+from common.stream_manager import start_acquisition, get_stream, stop_camera_stream, get_dual_stream
+from common.database import init_db
+from common.crud import get_camera_by_id
 
 app = FastAPI(title="Camera Service")
 
