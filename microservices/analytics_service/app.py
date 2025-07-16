@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from src.influx_conf.query_scores import query_latest_table
-from src.influx_conf.influx_config import INFLUX_BUCKET
+from common.influx_conf.query_scores import query_latest_table
+from common.influx_conf.influx_config import INFLUX_BUCKET
 
 app = FastAPI(title="Analytics Service")
 

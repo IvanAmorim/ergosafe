@@ -1,8 +1,8 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from src.models import User, Camera, CameraSide
-from src.database import init_db
-from src.crud import (
+from common.models import User, Camera, CameraSide
+from common.database import init_db
+from common.crud import (
     create_user, get_users, create_camera, get_cameras,
     get_user_cameras, delete_user, delete_camera
 )

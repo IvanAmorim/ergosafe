@@ -1,4 +1,4 @@
-# src/stream_manager.py
+# common/stream_manager.py
 
 import time
 import cv2
@@ -6,10 +6,10 @@ import logging
 import numpy as np
 from threading import Thread
 from queue import Queue
-from src.crud import get_camera_by_id
+from common.crud import get_camera_by_id
 from fastapi.responses import StreamingResponse
-from src.inference import YoloPoseSkeleton
-from src.dual_assessment import DualCameraAssessment
+from common.inference import YoloPoseSkeleton
+from common.dual_assessment import DualCameraAssessment
 
 
 logger = logging.getLogger("StreamManager")

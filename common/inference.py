@@ -3,9 +3,9 @@ import numpy as np
 import cv2
 import torch
 import math
-from src.influx import send_pose_data, send_reba_table, send_rula_table
-from src.reba_score import compute_reba_score
-from src.rula_score import compute_rula_score
+from common.influx import send_pose_data, send_reba_table, send_rula_table
+from common.reba_score import compute_reba_score
+from common.rula_score import compute_rula_score
 from datetime import datetime
 import threading
 

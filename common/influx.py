@@ -1,6 +1,6 @@
 from influxdb_client import Point
-from src.influx_conf.influx_client import write_api
-from src.influx_conf.influx_config import INFLUX_BUCKET
+from common.influx_conf.influx_client import write_api
+from common.influx_conf.influx_config import INFLUX_BUCKET
 import time
 
 

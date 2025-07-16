@@ -3,12 +3,12 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
-from src.models import User, Camera, CameraSide
-from src.database import init_db
-from src.crud import create_user, get_users, create_camera, get_cameras, get_user_cameras, get_camera_by_id, delete_camera, delete_user
-from src.stream_manager import start_acquisition, get_stream, stop_camera_stream, get_dual_stream
-from src.influx_conf.query_scores import query_latest_table
-from src.influx_conf.influx_config import INFLUX_BUCKET
+from common.models import User, Camera, CameraSide
+from common.database import init_db
+from common.crud import create_user, get_users, create_camera, get_cameras, get_user_cameras, get_camera_by_id, delete_camera, delete_user
+from common.stream_manager import start_acquisition, get_stream, stop_camera_stream, get_dual_stream
+from common.influx_conf.query_scores import query_latest_table
+from common.influx_conf.influx_config import INFLUX_BUCKET
 import uvicorn
 
 app = FastAPI()
@@ -105,5 +105,5 @@ def api_get_rula_table(camera_id: int, operator: str):
 
 
 if __name__ == "__main__":
-    uvicorn.run("src.main:app", host="0.0.0.0", port=8000)
+    uvicorn.run("common.main:app", host="0.0.0.0", port=8000)
 

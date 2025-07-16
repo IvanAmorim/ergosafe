@@ -1,8 +1,8 @@
 # Ergosafe Microservices
 
-This repository contains the Ergosafe application split into three microservices.
-Each service is a small FastAPI application and can be run individually via
-`docker-compose`.
+This repository contains the Ergosafe application organised into three
+FastAPI microservices located under the `microservices/` folder. Each service
+can be run individually via `docker-compose`.
 
 ## Services
 
